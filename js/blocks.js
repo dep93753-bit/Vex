@@ -117,7 +117,7 @@ export function buildProject({ stacks, variables, robotConfig, gen }) {
     slot: 0,
     platform: 'IQ',
     sdkVersion: '20230818.11.00.00',
-    appVersion: '4.65.0',
+    appVersion: '4.68.1',
     fileFormat: '2.0.0',
     targetBrainGen: gen === 'First' ? 'First' : 'Second',
     v5SoundsEnabled: false,
