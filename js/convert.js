@@ -360,6 +360,8 @@ export function detectLanguage(src, filename) {
 export function detectGen(src) {
   if (/\b(Inertial|brain_inertial|BrainInertial|inertial)\b/.test(src) || /\bOptical\b|\boptical\b|AiVision|aivision/.test(src)) return 'Second';
   if (/\b(Sonar|sonar)\b|ColorSensor\(|colorsensor\(/.test(src)) return 'First';
+  // VEXcode always sets up the built-in gyro on a 2nd gen brain; a generated setup without it is 1st gen
+  if (/VEXcode Generated Robot Configuration/.test(src)) return 'First';
   return 'Second';
 }
 

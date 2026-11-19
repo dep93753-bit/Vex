@@ -186,7 +186,7 @@ function showResult(result, lang) {
 
 els.download.addEventListener('click', () => {
   if (!lastProject) return;
-  const blob = new Blob([JSON.stringify(lastProject)], { type: 'application/json' });
+  const blob = new Blob([JSON.stringify(lastProject)], { type: 'application/octet-stream' });
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
   a.download = lastName + '.iqblocks';
