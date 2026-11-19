@@ -184,12 +184,32 @@ function showResult(result, lang) {
   els.result.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
-els.download.addEventListener('click', () => {
+els.download.addEventListener('click', async () => {
   if (!lastProject) return;
-  const blob = new Blob([JSON.stringify(lastProject)], { type: 'application/octet-stream' });
+  const text = JSON.stringify(lastProject);
+  const fileName = lastName + '.iqblocks';
+  // Where the browser supports a real "Save as" dialog, use it: the file is
+  // written with exactly the .iqblocks name, never a .json one.
+  if (typeof window.showSaveFilePicker === 'function') {
+    try {
+      const handle = await window.showSaveFilePicker({
+        suggestedName: fileName,
+        types: [{ description: 'VEXcode IQ blocks project', accept: { 'application/x-vexcode-iqblocks': ['.iqblocks'] } }]
+      });
+      const w = await handle.createWritable();
+      await w.write(text);
+      await w.close();
+      return;
+    } catch (e) {
+      if (e && e.name === 'AbortError') return; // user cancelled
+      // otherwise fall back to a normal download
+    }
+  }
+  // octet-stream (not JSON) so browsers don't tack ".json" onto the name
+  const blob = new Blob([text], { type: 'application/octet-stream' });
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
-  a.download = lastName + '.iqblocks';
+  a.download = fileName;
   document.body.appendChild(a);
   a.click();
   setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
